@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shared Care Log - Login</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="auth-body">
+  <main class="auth-shell">
+    <section class="auth-card">
+      <h1>Shared Care Log</h1>
+
+      <div id="msg" class="message hidden"></div>
+
+      <input id="email" type="email" placeholder="Email" required />
+      <input id="password" type="password" placeholder="Password" required />
+      <input id="name" type="text" placeholder="Full Name (for register)" />
+
+      <button id="loginBtn" class="btn btn-primary">Log In</button>
+      <button id="registerBtn" class="btn btn-secondary">Register</button>
+    </section>
+  </main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="supabase.js"></script>
+<script>
+const msg = document.getElementById('msg');
+function show(m){msg.textContent=m;msg.classList.remove('hidden')}
+
+document.getElementById('loginBtn').onclick = async () => {
+  const {error} = await supabaseClient.auth.signInWithPassword({
+    email: email.value,
+    password: password.value
+  });
+  if(error) return show(error.message);
+  location.href='index.html';
+};
+
+document.getElementById('registerBtn').onclick = async () => {
+  const {error} = await supabaseClient.auth.signUp({
+    email: email.value,
+    password: password.value,
+    options:{data:{full_name:name.value}}
+  });
+  if(error) return show(error.message);
+  show('Registered. Check email if required.');
+};
+</script>
+</body>
+</html>
